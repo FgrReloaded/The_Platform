@@ -137,6 +137,14 @@ document.getElementById('uploadStory').addEventListener('click', (e) => {
         currentStory.src = storyPic.src;
     }
 });
+let submitIdea  = document.getElementById('submitIdea');
+submitIdea.addEventListener('click', async (e) => {
+    e.preventDefault();
+    let a = document.createElement('a');
+    a.href = "https://docs.google.com/forms/d/e/1FAIpQLScAU3U2kz9q2rxTTUHlX-G6rd3oMIarIkePMpACfgPRha6Prg/viewform?vc=0&c=0&w=1&flr=0";
+    a.target = "_blank";
+    a.click();
+});
 
 
 
