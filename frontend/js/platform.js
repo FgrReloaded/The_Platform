@@ -428,14 +428,15 @@ const getPosts = async () => {
 
 let userPosts = JSON.parse(sessionStorage.getItem('userPosts'));
 if (!userPosts || userPosts.length == 0) {
-    getPosts();
+    // getPosts();
 } else {
     userPosts.forEach((post) => {
         if (!setPosts.includes(post)) {
             setPosts.push(post);
         }
     })
-    showFeeds();
+    
+    // showFeeds();
 }
 
 // get following posts
