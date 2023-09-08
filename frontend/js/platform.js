@@ -117,12 +117,13 @@ const addStories = () => {
     stories = document.querySelectorAll('.userStory');
     stories.forEach((story) => {
         story.addEventListener('click', (e) => {
-            let storyLink = e.target.getAttribute('data-story');
-            document.querySelector('.storyContainer').style.display = 'block';
-            document.querySelector('.overlay').style.display = 'block';
-            document.querySelector('.overlay').style.background = ' rgba(77, 77, 77, 0.9)';
-            document.getElementById('currentStory').src = storyLink;
-
+            if (sessionStorage.getItem('storyPic')) {
+                let storyLink = e.target.getAttribute('data-story');
+                document.querySelector('.storyContainer').style.display = 'block';
+                document.querySelector('.overlay').style.display = 'block';
+                document.querySelector('.overlay').style.background = ' rgba(77, 77, 77, 0.9)';
+                document.getElementById('currentStory').src = storyLink;
+            }
         })
     });
 }
