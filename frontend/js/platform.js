@@ -430,11 +430,11 @@ let userPosts = JSON.parse(sessionStorage.getItem('userPosts'));
 if (!userPosts || userPosts.length == 0) {
     // getPosts();
 } else {
-    userPosts.forEach((post) => {
-        if (!setPosts.includes(post)) {
-            setPosts.push(post);
-        }
-    })
+    // userPosts.forEach((post) => {
+    //     if (!setPosts.includes(post)) {
+    //         setPosts.push(post);
+    //     }
+    // })
     
     // showFeeds();
 }
