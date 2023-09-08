@@ -112,7 +112,7 @@ getGroups();
 userProfile.forEach((profile) => {
     profile.src = user.profilePic;
     profile.addEventListener("click", (e) => {
-        window.location.href = "/profile";
+        window.location.href = "/platform?profile=" + user.username;
     });
 });
 
@@ -158,6 +158,7 @@ document.querySelector(".closeModal").addEventListener("click", (e) => {
 });
 
 let submitIdea  = document.getElementById('submitIdea');
+
 submitIdea.addEventListener('click', async (e) => {
     e.preventDefault();
     let a = document.createElement('a');
@@ -307,6 +308,7 @@ searchBox.addEventListener('keydown', async (event) => {
 
 profileHref.forEach((item) => {
     item.addEventListener('click', () => {
+        console.log("first")
         window.location.href = "/platform?profile=" + user.username;
     })
 });
