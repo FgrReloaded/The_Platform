@@ -117,13 +117,11 @@ const addStories = () => {
     stories = document.querySelectorAll('.userStory');
     stories.forEach((story) => {
         story.addEventListener('click', (e) => {
-            if (sessionStorage.getItem('storyPic')) {
-                let storyLink = e.target.getAttribute('data-story');
-                document.querySelector('.storyContainer').style.display = 'block';
-                document.querySelector('.overlay').style.display = 'block';
-                document.querySelector('.overlay').style.background = ' rgba(77, 77, 77, 0.9)';
-                document.getElementById('currentStory').src = storyLink;
-            }
+            let storyLink = e.target.getAttribute('data-story');
+            document.querySelector('.storyContainer').style.display = 'block';
+            document.querySelector('.overlay').style.display = 'block';
+            document.querySelector('.overlay').style.background = ' rgba(77, 77, 77, 0.9)';
+            document.getElementById('currentStory').src = storyLink;
         })
     });
 }
@@ -132,10 +130,12 @@ document.querySelector(".myStory").addEventListener("click", () => {
 })
 
 document.getElementById('uploadStory').addEventListener('click', (e) => {
-    document.querySelector('.storyContainer').style.display = 'block';
-    document.querySelector('.overlay').style.display = 'block';
-    document.querySelector('.overlay').style.background = ' rgba(77, 77, 77, 0.9)';
-    currentStory.src = storyPic.src;
+    if (sessionStorage.getItem('storyPic')) {
+        document.querySelector('.storyContainer').style.display = 'block';
+        document.querySelector('.overlay').style.display = 'block';
+        document.querySelector('.overlay').style.background = ' rgba(77, 77, 77, 0.9)';
+        currentStory.src = storyPic.src;
+    }
 });
 
 
