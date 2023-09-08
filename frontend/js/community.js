@@ -175,7 +175,7 @@ createGroupBtn.addEventListener("click", async (e) => {
     });
     let data = await response.json();
     if (data.success) {
-        console.log(data);
+        window.location.reload();
     }
 });
 

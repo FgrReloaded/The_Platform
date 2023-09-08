@@ -41,7 +41,7 @@ router.post('/create-post', fetchuser, async (req, res) => {
 router.post('/get-following-posts', fetchuser, async (req, res) => {
     try {
         const { myFollowing } = req.body;
-        const posts = await Post.find({ username: { $in: myFollowing } });
+        const posts = await Post.find();
 
         if (!posts) {
             res.status(404).json({ success: false, message: "No posts found" });

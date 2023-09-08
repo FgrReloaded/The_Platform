@@ -126,7 +126,7 @@ const addStories = () => {
         })
     });
 }
-document.querySelector(".myStory").addEventListener("click", ()=>{
+document.querySelector(".myStory").addEventListener("click", () => {
     document.querySelector('.deleteStory').style.display = "block"
 })
 
