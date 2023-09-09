@@ -25,6 +25,7 @@ let currentStory = document.getElementById('currentStory');
 let deleteStory = document.querySelector('.deleteStory');
 let userOwnPosts = document.querySelector('.userOwnPosts');
 let allStories;
+let likeBtn;
 // Post array
 let setPosts = []
 // THEME
@@ -261,9 +262,7 @@ const showFeeds = () => {
     </div>
     <div class="action-buttons">
         <div class="interaction-buttons">
-            <span>${post.likes.includes(user._id) ? `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-heart-fill" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
-            </svg>`: `
+            <span class="likeContainer">${post.likes.includes(user._id) ? `<i data-id="${post._id}" color="#ff0000" class="fa-solid likeBtn fa-heart"></i>`: `
             <i data-id="${post._id}" class="uil likeBtn uil-heart"></i>
             `
             }
@@ -349,26 +348,22 @@ const showFeeds = () => {
             });
             const data = await response.json();
             if (data.success) {
+                console.log(data)
                 if (data.posts.user == user._id) {
-                    let myPosts = JSON.parse(sessionStorage.getItem('userPosts'));
-                    myPosts.forEach((post) => {
-                        if (post._id == data.posts._id) {
-                            post.likes = data.posts.likes;
-                        }
-                    })
-                    sessionStorage.setItem('userPosts', JSON.stringify(myPosts));
+                    // let myPosts = JSON.parse(sessionStorage.getItem('userPosts'));
+                    // myPosts.forEach((post) => {
+                    //     if (post._id == data.posts._id) {
+                    //         post.likes = data.posts.likes;
+                    //     }
+                    // })
+                    // sessionStorage.setItem('userPosts', JSON.stringify(myPosts));
                 }
                 if (data.like == "add") {
-                    e.target.classList.remove("uil-heart", "uil");
-                    e.target.innerHTML = `
-    <svg svg xmlns = "http://www.w3.org/2000/svg" width = "18" height = "18" fill = "red" class="bi bi-heart-fill" viewBox = "0 0 16 16" >
-        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
-                    </svg > `;
-                    e.target.style.color = "#ff0000";
+                   e.target.parentElement.innerHTML = `<i data-id="${id}" color="#ff0000" class="fa-solid likeBtn fa-heart"></i> `;
+                   window.location.reload()
                 } else {
-                    e.target.classList.add("uil-heart", "uil");
-                    e.target.innerHTML = ``;
-                    e.target.style.color = "#000";
+                    e.target.parentElement.innerHTML = `<i data-id="${id}" class="uil likeBtn uil-heart"></i> `;
+                   window.location.reload();
                 }
 
             }

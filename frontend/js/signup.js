@@ -3,6 +3,7 @@
 let Name = document.getElementById('Name');
 let Email = document.getElementById('E-mail');
 let Password = document.getElementById('Password');
+let CPassword = document.getElementById('CPassword');
 let username = document.getElementById('username');
 let birthday = document.getElementById('birthday');
 let Mobile = document.getElementById('Mobile');
@@ -14,6 +15,7 @@ let next = document.getElementById('next');
 let genderValue = "female";
 
 localStorage.getItem('token') != null ? window.location.href = "/platform" : null;
+
 
 
 gender.forEach((item) => {
@@ -36,6 +38,20 @@ form.addEventListener('submit', async (e) => {
         profilePic: profileImg.src,
         mobile: Mobile.value
     }
+    // check all fields in data
+    for (let key in data) {
+        if (data[key] == "") {
+            myAlert("Please fill all the fields");
+            next.innerHTML = "Next";
+            return;
+        }
+    }
+    if(data.password !== CPassword.value){
+        myAlert("Password are not matching");
+        next.innerHTML = "Next";
+        return;
+    }
+
     let res = await fetch('/auth/createuser', {
         method: "POST",
         headers: {

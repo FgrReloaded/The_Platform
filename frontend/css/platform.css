@@ -868,7 +868,7 @@ MEDIA QUERIES FOR SMALL LAPTOPS AND BIG TABLETS
   }
 
   .left .sidebar {
-    margin: 5rem 0 0 0;
+    margin: 1rem 0 0 0;
     position: relative;
   }
 
@@ -880,9 +880,9 @@ MEDIA QUERIES FOR SMALL LAPTOPS AND BIG TABLETS
     height: 4.4rem;
   }
 
-  main .container .left .profile {
+  /* main .container .left .profile {
     display: none;
-  }
+  } */
 
   .left .btn {
     display: none;
@@ -903,6 +903,10 @@ MEDIA QUERIES FOR SMALL TABLETS AND MOBILE PHONES
   }
 
   nav .create label {
+    /* padding: 0.1rem 5px; */
+    font-size: 1rem;
+  }
+  nav .create .profile-photo{
     display: none;
   }
 

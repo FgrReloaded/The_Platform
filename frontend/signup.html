@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
   <meta charset="UTF-8">
   <title>PLATFORM Registration.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
   <script src="https://kit.fontawesome.com/e2ac9cc532.js" crossorigin="anonymous"></script>
@@ -16,10 +16,9 @@
   <form id="form" class='signup-container'>
     <div class='left-container'>
       <img src="images/signup/Images/register_image.png">
-      <video autoplay width="240" height="240" <source src="images/signup/Images/platform.mp4" type="video/mp4">
-      </video>
+      <img src="./images/signup/Images/platform.gif" alt="">
       <img src="images/signup/Images/Quotes_new.png" width="100%"
-        style="margin-bottom: 0;margin-top: 0;padding: 0;height: 144px;width: 300px;border: 0;">
+        style="margin-bottom: 0;margin-top: 0;padding: 0;height: 45%;width: 300px;border: 0;">
       <div class='form'>
         <img src="">
       </div>
@@ -67,9 +66,9 @@
           <div class='gender'>
             <label for='gender-female'>Gender</label>
             <div class='radio-container'>
-              <input id='gender-male' name='gender' type='radio' value='male'>
+              <input checked='' id='gender-male' name='gender' type='radio' value='male'>
               <label for='gender-male'>Male</label>
-              <input checked='' id='gender-female' name='gender' type='radio' value='female'>
+              <input id='gender-female' name='gender' type='radio' value='female'>
               <label for='gender-female'>Female</label>
               <input id='gender-custom' name='gender' type='radio' value='Custom'>
               <label for='gender-custom'>Custom</label>
@@ -87,6 +86,8 @@
         <div class='Password'>
           <label for='Password'>Password</label>
           <input id='Password' name="password" placeholder="Create Password" type="text" required />
+          <label for='CPassword'>Confirm Password</label>
+          <input id='CPassword' name="cpassword" placeholder="Confirm Password" type="text" required />
         </div>
       </header>
       <footer>
