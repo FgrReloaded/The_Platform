@@ -14,6 +14,7 @@ let groupBox = document.querySelector(".groupBox");
 let myGroups = document.getElementById("myGroups");
 let profileHref = document.querySelectorAll(".profileHref");
 let allGroup = document.getElementById("allGroups");
+let currentPost;
 let viewGroup;
 let allGroups;
 
@@ -62,8 +63,8 @@ async function getGroups() {
                 <span>${group.groupType} &bull; Club</span>
             </div>
             <div class="actionBtn">
-            ${group.members.includes(user._id) ? group.admins.includes(user._id) ? `<button disabled class="btn btn-secondary"><i class="uil uil-check"></i> Admin</button>` :
-                    `<button disabled class="btn btn-secondary joinGroup"><i class="uil uil-check"></i> Member</button>`
+            ${group.members.includes(user._id) ? (group.admins.includes(user._id) ? `<button data-id="${group._id}" class="btn btn-secondary leaveGroup"><i class="uil uil-check"></i> Admin</button>` :
+                    `<button data-id="${group._id}" class="btn btn-secondary leaveGroup"><i class="uil uil-check"></i> Member</button>`)
                     :
                     `<button data-id="${group._id}" class="btn btn-primary joinGroup"><i class="uil uil-user-plus"></i> Join</button>`
                 }
@@ -71,6 +72,36 @@ async function getGroups() {
         </div>
             `;
         });
+
+        // Handle Join Group
+        let leaveGroup = document.querySelectorAll(".leaveGroup");
+        leaveGroup.forEach((leaveGroup) => {
+            leaveGroup.addEventListener("mouseenter", (e) => {
+                currentPost = e.target.innerHTML;
+                e.target.innerHTML = `<i class="uil uil-times"></i> Leave`;
+            });
+            leaveGroup.addEventListener("mouseleave", (e) => {
+                e.target.innerHTML = currentPost;
+            });
+        });
+
+        leaveGroup.forEach((leaveGroup) => {
+            leaveGroup.addEventListener("click", async (e) => {
+                let groupId = e.target.getAttribute("data-id");
+                let response = await fetch("/groups/leave?id=" + groupId, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "auth-token": localStorage.getItem("token"),
+                    },
+                });
+                let data = await response.json();
+                if (data.success) {
+                    window.location.reload();
+                }
+            });
+        });
+
         viewGroup = document.querySelectorAll(".groupName");
         viewGroup.forEach((viewGroup) => {
             viewGroup.addEventListener("click", (e) => {
@@ -86,6 +117,7 @@ async function getGroups() {
         let joinGroup = document.querySelectorAll(".joinGroup");
         joinGroup.forEach((joinGroup) => {
             joinGroup.addEventListener("click", async (e) => {
+                console.log("first")
                 let groupId = e.target.getAttribute("data-id");
                 let response = await fetch("/groups/join?id=" + groupId, {
                     method: "PUT",
@@ -96,10 +128,9 @@ async function getGroups() {
                 });
                 let data = await response.json();
                 if (data.success) {
-                    e.target.innerHTML = "Member";
-                    e.target.disabled = true;
+                    e.target.innerHTML = "<i class='uil uil-check'></i> Member";
                     e.target.classList.remove("btn-primary");
-                    e.target.classList.add("btn-secondary");
+                    e.target.classList.add("btn-secondary", "leaveGroup");
                 }
             });
         });
@@ -157,7 +188,7 @@ document.querySelector(".closeModal").addEventListener("click", (e) => {
     groupTab[0].click();
 });
 
-let submitIdea  = document.getElementById('submitIdea');
+let submitIdea = document.getElementById('submitIdea');
 
 submitIdea.addEventListener('click', async (e) => {
     e.preventDefault();
@@ -206,9 +237,9 @@ if (group) {
     document.querySelector('.gDesc').innerText = singleGroup[0].desc;
     document.querySelector('.gType').innerText = singleGroup[0].groupType;
     if (singleGroup[0].admins.includes(user._id)) {
-        buttonSec.innerHTML = `<button disabled class="btn btn-secondary"><i class="uil uil-check"></i> Admin</button>`;
+        buttonSec.innerHTML = `<button class="btn btn-secondary leaveGroup"><i class="uil uil-check"></i> Admin</button>`;
     } else if (singleGroup[0].members.includes(user._id)) {
-        buttonSec.innerHTML = `<button disabled class="btn btn-secondary"><i class="uil uil-check"></i> Member</button>`;
+        buttonSec.innerHTML = `<button class="btn btn-secondary leaveGroup"><i class="uil uil-check"></i> Member</button>`;
     } else {
         buttonSec.innerHTML = `<button data-id="${singleGroup[0]._id}" class="btn btn-primary joinGroup"><i class="uil uil-user-plus"></i> Join</button>`;
     }
@@ -234,14 +265,75 @@ myGroups.addEventListener("click", (e) => {
             <span>${group.groupType} &bull; Club</span>
         </div>
         <div class="actionBtn">
-        ${group.members.includes(user._id) ? group.admins.includes(user._id) ? `<button disabled class="btn btn-secondary"><i class="uil uil-check"></i> Admin</button>` :
-                `<button disabled class="btn btn-secondary joinGroup"><i class="uil uil-check"></i> Member</button>`
+            ${group.members.includes(user._id) ? (group.admins.includes(user._id) ? `<button data-id="${group._id}" class="btn btn-secondary leaveGroup"><i class="uil uil-check"></i> Admin</button>` :
+                `<button data-id="${group._id}" class="btn btn-secondary leaveGroup"><i class="uil uil-check"></i> Member</button>`)
                 :
                 `<button data-id="${group._id}" class="btn btn-primary joinGroup"><i class="uil uil-user-plus"></i> Join</button>`
             }
         </div>
     </div>
         `;
+    });
+    // Handle Join Group
+    let leaveGroup = document.querySelectorAll(".leaveGroup");
+    leaveGroup.forEach((leaveGroup) => {
+        leaveGroup.addEventListener("mouseenter", (e) => {
+            currentPost = e.target.innerHTML;
+            e.target.innerHTML = `<i class="uil uil-times"></i> Leave`;
+        });
+        leaveGroup.addEventListener("mouseleave", (e) => {
+            e.target.innerHTML = currentPost;
+        });
+    });
+
+    leaveGroup.forEach((leaveGroup) => {
+        leaveGroup.addEventListener("click", async (e) => {
+            let groupId = e.target.getAttribute("data-id");
+            let response = await fetch("/groups/leave?id=" + groupId, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "auth-token": localStorage.getItem("token"),
+                },
+            });
+            let data = await response.json();
+            if (data.success) {
+                window.location.reload();
+            }
+        });
+    });
+
+    viewGroup = document.querySelectorAll(".groupName");
+    viewGroup.forEach((viewGroup) => {
+        viewGroup.addEventListener("click", (e) => {
+            let groupId = e.target.getAttribute("data-id");
+            // filter that group from groupId and show it in single group
+            let singleGroup = allGroups.filter((group) => {
+                return group._id == groupId;
+            });
+            sessionStorage.setItem("singleGroup", JSON.stringify(singleGroup));
+            window.location.href = "/community?group=" + e.target.innerText;
+        });
+    });
+    let joinGroup = document.querySelectorAll(".joinGroup");
+    joinGroup.forEach((joinGroup) => {
+        joinGroup.addEventListener("click", async (e) => {
+            console.log("first")
+            let groupId = e.target.getAttribute("data-id");
+            let response = await fetch("/groups/join?id=" + groupId, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "auth-token": localStorage.getItem("token"),
+                },
+            });
+            let data = await response.json();
+            if (data.success) {
+                e.target.innerHTML = "<i class='uil uil-check'></i> Member";
+                e.target.classList.remove("btn-primary");
+                e.target.classList.add("btn-secondary", "leaveGroup");
+            }
+        });
     });
 });
 allGroup.addEventListener("click", (e) => {
@@ -260,14 +352,75 @@ allGroup.addEventListener("click", (e) => {
             <span>${group.groupType} &bull; Club</span>
         </div>
         <div class="actionBtn">
-        ${group.members.includes(user._id) ? group.admins.includes(user._id) ? `<button disabled class="btn btn-secondary"><i class="uil uil-check"></i> Admin</button>` :
-                `<button disabled class="btn btn-secondary joinGroup"><i class="uil uil-check"></i> Member</button>`
+        ${group.members.includes(user._id) ? (group.admins.includes(user._id) ? `<button data-id="${group._id}"  class="btn btn-secondary leaveGroup"><i class="uil uil-check"></i> Admin</button>` :
+                `<button data-id="${group._id}" class="btn btn-secondary leaveGroup"><i class="uil uil-check"></i> Member</button>`)
                 :
                 `<button data-id="${group._id}" class="btn btn-primary joinGroup"><i class="uil uil-user-plus"></i> Join</button>`
             }
-        </div>
+    </div>
     </div>
         `;
+    });
+    // Handle Join Group
+    let leaveGroup = document.querySelectorAll(".leaveGroup");
+        leaveGroup.forEach((leaveGroup) => {
+            leaveGroup.addEventListener("mouseenter", (e) => {
+                currentPost = e.target.innerHTML;
+                e.target.innerHTML = `<i class="uil uil-times"></i> Leave`;
+            });
+            leaveGroup.addEventListener("mouseleave", (e) => {
+                e.target.innerHTML = currentPost;
+            });
+        });
+
+    leaveGroup.forEach((leaveGroup) => {
+        leaveGroup.addEventListener("click", async (e) => {
+            let groupId = e.target.getAttribute("data-id");
+            let response = await fetch("/groups/leave?id=" + groupId, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "auth-token": localStorage.getItem("token"),
+                },
+            });
+            let data = await response.json();
+            if (data.success) {
+                window.location.reload();
+            }
+        });
+    });
+
+    viewGroup = document.querySelectorAll(".groupName");
+    viewGroup.forEach((viewGroup) => {
+        viewGroup.addEventListener("click", (e) => {
+            let groupId = e.target.getAttribute("data-id");
+            // filter that group from groupId and show it in single group
+            let singleGroup = allGroups.filter((group) => {
+                return group._id == groupId;
+            });
+            sessionStorage.setItem("singleGroup", JSON.stringify(singleGroup));
+            window.location.href = "/community?group=" + e.target.innerText;
+        });
+    });
+    let joinGroup = document.querySelectorAll(".joinGroup");
+    joinGroup.forEach((joinGroup) => {
+        joinGroup.addEventListener("click", async (e) => {
+            console.log("first")
+            let groupId = e.target.getAttribute("data-id");
+            let response = await fetch("/groups/join?id=" + groupId, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "auth-token": localStorage.getItem("token"),
+                },
+            });
+            let data = await response.json();
+            if (data.success) {
+                e.target.innerHTML = "<i class='uil uil-check'></i> Member";
+                e.target.classList.remove("btn-primary");
+                e.target.classList.add("btn-secondary", "leaveGroup");
+            }
+        });
     });
 });
 

@@ -38,7 +38,7 @@ router.post('/create', fetchuser, [
         }
         // Create a new group
         const group = new Group({
-            name: groupName, desc: groupDesc, groupType, groupInvite, groupPost, admins: req.user.id, members: req.user.id,coverPhoto: coverUrl, logo: logoUrl
+            name: groupName, desc: groupDesc, groupType, groupInvite, groupPost, admins: req.user.id, members: req.user.id, coverPhoto: coverUrl, logo: logoUrl
         })
         const savedGroup = await group.save();
         res.status(200).json({ success: true, savedGroup });
@@ -51,14 +51,76 @@ router.post('/create', fetchuser, [
 router.put('/join', fetchuser, async (req, res) => {
     try {
         const { id } = req.query;
-        // add user to current group and update member
-        const group = await Group.findByIdAndUpdate(id, { $push: { members: req.user.id } }, { new: true });
+        // Find the user
+        const user = await User.findById(req.user.id);
+        // Check if user is joined in group or not
+        if (user.groupsJoined.includes(id)) {
+            return res.status(401).json({ success: false, message: "User already joined in group" });
+        }
+        // Find the group
+        const group = await Group.findById(id);
+        // Update the group members
+        group.members.push(req.user.id);
+        await group.save();
+        // Update the user groupsJoined
+        user.groupsJoined.push(id);
+        await user.save();
+
+
         res.status(200).json({ success: true, group });
     }
     catch (error) {
         console.error(error.message);
     }
 });
+
+// Leave a Group
+router.put('/leave', fetchuser, async (req, res) => {
+    try {
+        const { id } = req.query;
+        // Find the user
+        let user = await User.findById(req.user.id);
+
+        // Find the group
+        const group = await Group.findById(id);
+        // Check if user is joined in group or not
+        if (!group.members.includes(req.user.id)) {
+            return res.status(401).json({ success: false, message: "User not joined in group" });
+        }
+        // Update the group members
+        const index = group.members.indexOf(req.user.id);
+        group.members.splice(index, 1);
+        //  Check for group admin
+        if (group.admins.includes(req.user.id)) {
+            const index = group.admins.indexOf(req.user.id);
+            group.admins.splice(index, 1);
+            // Check if group has no admin
+            if (group.admins.length === 0) {
+                // Delete the group
+                await Group.findByIdAndDelete(id);
+                // Update all the user groupsJoined
+                for (let i = 0; i < group.members.length; i++) {
+                    const user = await User.findById(group.members[i]);
+                    const index2 = user.groupsJoined.indexOf(id);
+                    user.groupsJoined.splice(index2, 1);
+                    await user.save();
+                }
+                res.status(200).json({ success: true, delete: true });
+            }
+            res.status(200).json({ success: true, group });
+        }
+        // Update the user groupsJoined
+        const index2 = user.groupsJoined.indexOf(id);
+        user.groupsJoined.splice(index2, 1);
+        await user.save();
+
+        res.status(200).json({ success: true, group });
+    }
+    catch (error) {
+        console.error(error.message);
+    }
+});
+
 
 
 

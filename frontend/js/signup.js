@@ -32,7 +32,7 @@ form.addEventListener('submit', async (e) => {
         fullname: Name.value,
         email: Email.value,
         password: Password.value,
-        username: username.value,
+        username: (username.value).toLowerCase(),
         bday: birthday.value,
         gender: genderValue,
         profilePic: profileImg.src,

@@ -18,8 +18,8 @@ let createPost = document.getElementById("createPost");
 let postBtn = document.getElementById("post");
 let profileHref = document.querySelectorAll(".profileHref");
 let logout = document.getElementById("logout");
-let searchResult = document.getElementById("searchResult");
-let searchBox = document.getElementById("searchBox");
+let searchResult = document.querySelectorAll(".searchResult");
+let searchBox = document.querySelectorAll(".searchBox");
 let stories = document.getElementById("storiesContainer");
 let currentStory = document.getElementById('currentStory');
 let deleteStory = document.querySelector('.deleteStory');
@@ -138,7 +138,7 @@ document.getElementById('uploadStory').addEventListener('click', (e) => {
         currentStory.src = storyPic.src;
     }
 });
-let submitIdea  = document.getElementById('submitIdea');
+let submitIdea = document.getElementById('submitIdea');
 submitIdea.addEventListener('click', async (e) => {
     e.preventDefault();
     let a = document.createElement('a');
@@ -262,13 +262,13 @@ const showFeeds = () => {
     </div>
     <div class="action-buttons">
         <div class="interaction-buttons">
-            <span class="likeContainer">${post.likes.includes(user._id) ? `<i data-id="${post._id}" color="#ff0000" class="fa-solid likeBtn fa-heart"></i>`: `
+            <span class="likeContainer">${post.likes.includes(user._id) ? `<i data-id="${post._id}" color="#ff0000" class="fa-solid likeBtn fa-heart"></i>` : `
             <i data-id="${post._id}" class="uil likeBtn uil-heart"></i>
             `
             }
             </span>
             <!--<span><i data-id="${post._id}" class="uil openComment uil-comment-dots"></i></span> -->
-            <span><i class="uil uil-share-alt"></i></span>
+            <span><i class="uil shareBtn uil-share-alt"></i></span>
         </div>
        
     </div>
@@ -359,11 +359,11 @@ const showFeeds = () => {
                     // sessionStorage.setItem('userPosts', JSON.stringify(myPosts));
                 }
                 if (data.like == "add") {
-                   e.target.parentElement.innerHTML = `<i data-id="${id}" color="#ff0000" class="fa-solid likeBtn fa-heart"></i> `;
-                   window.location.reload()
+                    e.target.parentElement.innerHTML = `<i data-id="${id}" color="#ff0000" class="fa-solid likeBtn fa-heart"></i> `;
+                    window.location.reload()
                 } else {
                     e.target.parentElement.innerHTML = `<i data-id="${id}" class="uil likeBtn uil-heart"></i> `;
-                   window.location.reload();
+                    window.location.reload();
                 }
 
             }
@@ -430,7 +430,7 @@ if (!userPosts || userPosts.length == 0) {
     //         setPosts.push(post);
     //     }
     // })
-    
+
     // showFeeds();
 }
 
@@ -873,19 +873,16 @@ const getUserPost = async (profile) => {
                 }
             </div>
             <div class="action-buttons">
-                <div class="interaction-buttons">
-                    <span>${post.likes.includes(user._id) ? `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
-                    </svg>`: `
-                    <i data-id="${post._id}" class="uil likeBtn uil-heart"></i>
-                    `
+        <div class="interaction-buttons">
+            <span class="likeContainer">${post.likes.includes(user._id) ? `<i data-id="${post._id}" color="#ff0000" class="fa-solid likeBtn fa-heart"></i>` : `
+            <i data-id="${post._id}" class="uil likeBtn uil-heart"></i>
+            `
                 }
-                    </span>
-                    <!--
-                    <span><i class="uil uil-comment-dots"></i></span> -->
-                    <span><i class="uil uil-share-alt"></i></span>
-                </div>                  
-            </div>
+            </span>
+            <!--<span><i data-id="${post._id}" class="uil openComment uil-comment-dots"></i></span> -->
+            <span><i class="uil shareBtn uil-share-alt"></i></span>
+        </div>
+    </div>
             ${post.likes.length > 0 ? `
             <div class="liked-by">
             <p>Liked by <b>${post.likes.includes(user._id) ? "you" : ""} </b> ${post.likes.includes(user._id) && post.likes.length > 1 ? "and" : ""} ${(post.likes.includes(user._id) && post.likes.length <= 1) ? "" : ` <b> ${post.likes.length >= 1 ? post.likes.includes(user._id) ? post.likes.length - 1 + " others" : post.likes.length + " others" : ""} </b>`}</p>
@@ -897,6 +894,42 @@ const getUserPost = async (profile) => {
             userOwnPosts.innerHTML += ele;
         });
 
+        let likeBtn = document.querySelectorAll('.likeBtn');
+        likeBtn.forEach((btn) => {
+            btn.addEventListener('click', async (e) => {
+                let id = e.target.getAttribute('data-id');
+                const response = await fetch('/posts/like-post', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'auth-token': localStorage.getItem('token')
+                    },
+                    body: JSON.stringify({ postId: id })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    console.log(data)
+                    if (data.posts.user == user._id) {
+                        // let myPosts = JSON.parse(sessionStorage.getItem('userPosts'));
+                        // myPosts.forEach((post) => {
+                        //     if (post._id == data.posts._id) {
+                        //         post.likes = data.posts.likes;
+                        //     }
+                        // })
+                        // sessionStorage.setItem('userPosts', JSON.stringify(myPosts));
+                    }
+                    if (data.like == "add") {
+                        e.target.parentElement.innerHTML = `<i data-id="${id}" color="#ff0000" class="fa-solid likeBtn fa-heart"></i> `;
+                        window.location.reload()
+                    } else {
+                        e.target.parentElement.innerHTML = `<i data-id="${id}" class="uil likeBtn uil-heart"></i> `;
+                        window.location.reload();
+                    }
+
+                }
+
+            })
+        });
         document.querySelectorAll('.deletePost').forEach((btn) => {
             btn.addEventListener('click', async (e) => {
                 let id = e.target.getAttribute('data-id');
@@ -1015,38 +1048,50 @@ document.querySelector('.follow').addEventListener('mouseleave', (e) => {
     }
 });
 
-// Handle Search
-searchBox.addEventListener('keydown', async (event) => {
-    if (event.key === 'Enter' && searchBox.value != "") {
-        if (searchBox.value[0] == '@') {
-            searchBox.value = searchBox.value.slice(1);
-        }
-        const response = await fetch('/auth/search?search=' + searchBox.value, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'auth-token': localStorage.getItem('token')
+// Handle Search'
+searchBox.forEach(e => {
+    e.addEventListener('keydown', async (event) => {
+        if (event.key === 'Enter' && event.target.value != "") {
+            if (event.target.value[0] == '@') {
+                event.target.value = event.target.value.slice(1);
             }
-        });
-        const data = await response.json();
-        if (data.success) {
-            if (data.users.length > 0) {
-                searchResult.style.display = "flex";
-                searchResult.innerHTML = `
+            event.target.value = event.target.value.toLowerCase();
+            const response = await fetch('/auth/search?search=' + event.target.value, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'auth-token': localStorage.getItem('token')
+                }
+            });
+            const data = await response.json();
+            if (data.success) {
+                if (data.users.length > 0) {
+                    searchResult.forEach((result) => {
+                        result.style.display = "flex";
+                        result.innerHTML = `
                 <div class="profile-photo">
                     <img src=${data.users[0].profilePic}  />
                 </div>
                 <a href = '/platform?profile=${data.users[0].username}' id = "searchName" > ${data.users[0].fullname}</a>
             `;
-                let searchClose = document.querySelector(".searchClose");
-                searchClose.style.display = "block";
-                searchClose.addEventListener("click", (e) => {
-                    searchResult.style.display = "none";
-                    searchBox.value = "";
-                });
+                        let searchClose = document.querySelectorAll(".searchClose");
+                        searchClose.forEach((close) => {
+                            close.style.display = "block";
+                            close.addEventListener("click", (e) => {
+                                searchResult.forEach((result) => {
+                                    result.style.display = "none";
+                                });
+                                searchBox.forEach((box) => {
+                                    box.value = "";
+                                });
+
+                            });
+                        });
+                    });
+                }
             }
         }
-    }
+    });
 });
 
 // Hande Message Operations
@@ -1066,13 +1111,22 @@ if (messageUrl) {
 }
 
 
-
+document.getElementById("showPop").addEventListener("click", () => {
+    document.getElementById("pop").classList.toggle("showPop")
+});
+document.getElementById("msg").addEventListener("click", () => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const profile = urlParams.get('profile');
+    window.location.href = "/platform?message=true&user=" + profile;
+});
 // Handle Logout
 
 logout.addEventListener('click', () => {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
     sessionStorage.removeItem('followersStories');
+    localStorage.removeItem("currentUserId")
     sessionStorage.removeItem('userPosts');
     sessionStorage.removeItem('storyPic');
     window.location.href = "/";

@@ -8,7 +8,7 @@
     <title>The Platform</title>
     <!-- ICONSCOUT CDN -->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css">
-    <script src="https://kit.fontawesome.com/e5cbc6fe70.js" crossorigin="anonymous"></script>    <!-- STYLESHEET -->
+    <script src="https://kit.fontawesome.com/e5cbc6fe70.js" crossorigin="anonymous"></script> <!-- STYLESHEET -->
     <link rel="stylesheet" href="./css/platform.css">
 </head>
 
@@ -24,7 +24,7 @@
                 </div>
             </div>
             <h2 class="log" onclick="window.location.href='/platform' ">
-                The Platform 
+                The Platform
             </h2>
             <div class="search-bar">
                 <i class="uil uil-search"></i>
@@ -91,7 +91,15 @@
 
                 <!-- close button -->
                 <span id="close-btn"><i class="uil uil-multiply"></i></span>
+                <div class="search-bar miniSearch">
+                    <i class="uil uil-search"></i>
+                    <input type="search" class="searchBox" id="searchBox"
+                        placeholder="Search for creators(@username), inspirations, and projects">
+                    <div id="searchResult" class="searchResult">
 
+                    </div>
+                    <i class="uil uil-times-circle searchClose"></i>
+                </div>
                 <!-------------------- SIDEBAR ------------------------->
                 <div class="sidebar">
                     <a onclick="window.location.href='/platform'" class="menu-item active">
@@ -207,7 +215,12 @@
                             </div>
                             <div class="buttonArea">
                                 <button class="follow"><i class="uil uil-user-plus"></i> Follow</button>
-                                <button class="threeDot"><i class="uil uil-ellipsis-h"></i></button>
+                                <button class="threeDot">
+                                    <i id="showPop" class="uil uil-ellipsis-h"></i>
+                                    <div class="popup" id="pop">
+                                        <span id="msg">Message</span>
+                                    </div> 
+                                </button>
                             </div>
                         </div>
                         <div class="followList">
