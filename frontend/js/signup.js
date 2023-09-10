@@ -46,7 +46,7 @@ form.addEventListener('submit', async (e) => {
             return;
         }
     }
-    if(data.password !== CPassword.value){
+    if (data.password !== CPassword.value) {
         myAlert("Password are not matching");
         next.innerHTML = "Next";
         return;

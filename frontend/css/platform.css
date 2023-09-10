@@ -1380,3 +1380,12 @@ input[type="search"]::-webkit-search-results-button,
 input[type="search"]::-webkit-search-results-decoration {
 -webkit-appearance:none;
 }
+
+@media (max-width: 600px){
+ 
+  .createPost {
+    justify-content: space-between;
+    left: 2% !important;
+    right: 2% !important;
+}
+}

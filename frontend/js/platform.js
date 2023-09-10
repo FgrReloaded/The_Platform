@@ -239,7 +239,7 @@ const showFeeds = () => {
                 <img src="${post.userProfilePic}">
             </div>
             <div class="ingo">
-                <h3>${post.fullname}</h3>
+                <h3 onclick="window.location.href='/platform?profile=${post.username}'">${post.fullname}</h3>
                 <small>${time}</small>
             </div>
         </div>
