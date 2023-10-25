@@ -19,9 +19,23 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static('frontend', {
+app.use(express.static('build', {
     extensions: ['html', 'htm'],
 }));
+
+app.get('/platform', (req, res) => {
+    res.sendFile(__dirname + '/build/index.html');
+});
+
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/build/Home.html');
+})
+app.get('/login', (req, res) => {
+    res.sendFile(__dirname + '/build/login.html');
+})
+app.get('/signup', (req, res) => {
+    res.sendFile(__dirname + '/build/signup.html');
+})
 app.use(fileUpload({
     useTempFiles: true
 }));

@@ -1,6 +1,7 @@
 const express = require("express");
 const { body, validationResult } = require('express-validator');
 const User = require("../models/User");
+const Post = require("../models/Post");
 var jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const router = express.Router();
@@ -125,7 +126,7 @@ router.put("/follow", fetchuser, async (req, res, next) => {
             const index2 = currentUser.following.indexOf(user._id);
             currentUser.following.splice(index2, 1);
             await currentUser.save();
-            return res.status(200).json({ success: true, follow: "remove", });
+            return res.status(200).json({ success: true, follow: "remove" });
         }
         // add the follower
         currentUser.following.push(user._id);
@@ -145,14 +146,47 @@ router.put("/follow", fetchuser, async (req, res, next) => {
 router.get("/search", async (req, res) => {
     try {
         const { search } = req.query;
-        
-        const users = await User.find({username: search}).select("-password");
+
+        const users = await User.find({ username: search }).select("-password");
 
         if (!users) {
             return res.status(404).json("Not Found")
         }
 
         res.status(200).json({ users, success: true });
+    } catch (error) {
+        console.error(error.message);
+    }
+});
+
+// add bookmark
+router.put('/bookmark', fetchuser, async (req, res) => {
+    try {
+        const { postId } = req.query;
+        const { id } = req.user;
+        const user = await User.findById(id);
+        const post = await Post.findById(postId);
+        // check if post exist
+        if (!post) {
+            return res.status(404).json({ success: false, message: "Post not found" });
+        }
+        // check if user exist
+        if (user.length === 0) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+        // check if it already bookmarked
+        if ((user.bookmarks).includes(postId)) {
+            // remove the bookmark
+            const index = (user.bookmarks).indexOf(postId);
+            (user.bookmarks).splice(index, 1);
+            await user.save();
+            return res.status(200).json({ success: true, user, bookmark: "remove" });
+        }
+
+        // add the bookmark
+        user.bookmarks.push(postId);
+        await user.save();
+        res.status(200).json({ success: true, user, bookmark: "add" });
     } catch (error) {
         console.error(error.message);
     }

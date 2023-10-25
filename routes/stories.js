@@ -23,11 +23,12 @@ router.post('/create-story', fetchuser, async (req, res) => {
     try {
         const { id } = req.user;
         // create a story
-        const { storyLink, user, userFullName } = req.body;
-        const post = await Story.create({ story: storyLink, user, userFullName });
+        const { story,  fullname } = req.body;
+        const post = await Story.create({ story, user:id, userFullName:fullname });
         res.status(200).json({ success: true, post });
-    } catch (error) {
-
+    } catch (error) {   
+        console.error(error.message);
+        res.status(500).send("Internal Server Error");
     }
 });
 
@@ -38,7 +39,7 @@ router.post('/get-following-stories', fetchuser, async (req, res) => {
         const { myFollowing } = req.body;
         const stories = await Story.find({ user: { $in: myFollowing } });
         if (stories.length == 0) {
-            res.status(404).json({ success: false, message: "No stories found" });
+            return res.status(404).json({ success: false, message: "No stories found" });
         }
         res.status(200).json({ stories, success: true });
     } catch (error) {

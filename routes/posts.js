@@ -14,7 +14,7 @@ router.get('/get-posts', fetchuser, async (req, res) => {
         // fetch 2 latest posts of this user
         const posts = await Post.find({ user: id }).sort({ createdAt: -1 }).limit(2);
         if (!posts) {
-            res.status(404).json({ success: false, message: "No posts found" });
+            return res.status(404).json({ success: false, message: "No posts found" });
         }
         res.status(200).json({ success: true, posts });
     }
@@ -40,11 +40,12 @@ router.post('/create-post', fetchuser, async (req, res) => {
 // POST /get-following-posts
 router.post('/get-following-posts', fetchuser, async (req, res) => {
     try {
+        const { id } = req.user;
         const { myFollowing } = req.body;
-        const posts = await Post.find();
-
+        // const posts = await Post.find({ username: { $in: myFollowing } }).sort({ createdAt: -1 });
+        const posts = await Post.find({ user: { $ne: id } }).sort({ createdAt: -1 });
         if (!posts) {
-            res.status(404).json({ success: false, message: "No posts found" });
+            return res.status(404).json({ success: false, message: "No posts found" });
         }
         res.status(200).json({ success: true, posts });
 
@@ -59,6 +60,9 @@ router.put('/like-post', fetchuser, async (req, res) => {
         const { postId } = req.body;
         const { id } = req.user;
         const posts = await Post.findById(postId);
+        if (posts.length === 0) {
+            return res.status(404).json({ success: false, message: "Post not found" });
+        }
         // check if it already liked
         if (posts.likes.includes(id)) {
             // remove the like
@@ -70,41 +74,13 @@ router.put('/like-post', fetchuser, async (req, res) => {
         // add the like
         posts.likes.push(id);
         await posts.save();
-        if (posts.length === 0) {
-            res.status(404).json({ success: false, message: "Post not found" });
-        }
+
         res.status(200).json({ success: true, posts, like: "add" });
     } catch (error) {
         console.error(error.message);
     }
 });
 
-// add bookmark
-router.put('/bookmark', fetchuser, async (req, res) => {
-    try {
-        const { postId } = req.query;
-        const { id } = req.user;
-        const posts = await Post.findById(postId);
-        // check if it already bookmarked
-        if ((posts.bookmarks).includes(id)) {
-            // remove the bookmark
-            const index = (posts.bookmarks).indexOf(id);
-            (posts.bookmarks).splice(index, 1);
-            await posts.save();
-            return res.status(200).json({ success: true, posts, bookmark: "remove" });
-        }
-
-        // add the bookmark
-        posts.bookmarks.push(id);
-        await posts.save();
-        if (posts.length === 0) {
-            res.status(404).json({ success: false, message: "Post not found" });
-        }
-        res.status(200).json({ success: true, posts, bookmark: "add" });
-    } catch (error) {
-        console.error(error.message);
-    }
-});
 
 // get users post
 router.get('/get-user-posts', fetchuser, async (req, res) => {
@@ -112,7 +88,7 @@ router.get('/get-user-posts', fetchuser, async (req, res) => {
         const { profile } = req.query;
         const posts = await Post.find({ username: profile });
         if (posts.length === 0) {
-            res.status(404).json({ success: false, message: "No posts found" });
+            return res.status(404).json({ success: false, message: "No posts found" });
         }
         res.status(200).json({ success: true, posts });
     } catch (error) {

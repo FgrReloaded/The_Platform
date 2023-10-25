@@ -41,6 +41,7 @@ router.post('/create', fetchuser, [
             name: groupName, desc: groupDesc, groupType, groupInvite, groupPost, admins: req.user.id, members: req.user.id, coverPhoto: coverUrl, logo: logoUrl
         })
         const savedGroup = await group.save();
+
         res.status(200).json({ success: true, savedGroup });
     } catch (error) {
         console.error(error.message);
@@ -74,6 +75,20 @@ router.put('/join', fetchuser, async (req, res) => {
     }
 });
 
+router.get('/get-community-users', fetchuser, async (req, res) => {
+    try {
+        const { groupId } = req.query;
+        const members = await Group.findById(groupId).populate({
+            path: 'members',
+            select: 'fullname username profilePic',
+        }).exec();
+        res.status(200).json({ success: true, members });
+
+    } catch (error) {
+        console.error(error.message);
+    }
+})
+
 // Leave a Group
 router.put('/leave', fetchuser, async (req, res) => {
     try {
@@ -99,15 +114,15 @@ router.put('/leave', fetchuser, async (req, res) => {
                 // Delete the group
                 await Group.findByIdAndDelete(id);
                 // Update all the user groupsJoined
-                for (let i = 0; i < group.members.length; i++) {
-                    const user = await User.findById(group.members[i]);
-                    const index2 = user.groupsJoined.indexOf(id);
-                    user.groupsJoined.splice(index2, 1);
-                    await user.save();
-                }
-                res.status(200).json({ success: true, delete: true });
+                // for (let i = 0; i < group.members.length; i++) {
+                //     const user = await User.findById(group.members[i]);
+                //     const index2 = user.groupsJoined.indexOf(id);
+                //     user.groupsJoined.splice(index2, 1);
+                //     await user.save();
+                // }
+                return res.status(200).json({ success: true, delete: true });
             }
-            res.status(200).json({ success: true, group });
+            return res.status(200).json({ success: true, group });
         }
         // Update the user groupsJoined
         const index2 = user.groupsJoined.indexOf(id);
