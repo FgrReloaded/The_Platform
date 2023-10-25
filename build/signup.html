@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>PLATFORM Registration.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+  <script src="https://kit.fontawesome.com/e2ac9cc532.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="./css/signup.css">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
+</head>
+
+<body>
+  <!-- partial:index.partial -->
+  <form id="form" class='signup-container'>
+    <div class='left-container'>
+      <img src="images/signup/Images/register_image.png">
+      <img src="./images/signup/Images/platform.gif" alt="">
+      <img src="images/signup/Images/Quotes_new.png" width="100%"
+        style="margin-bottom: 0;margin-top: 0;padding: 0;height: 45%;width: 300px;border: 0;">
+      <div class='form'>
+        <img src="">
+      </div>
+    </div>
+    <div class='right-container'>
+      <header>
+        <h1>Create a new account</h1>
+        <div class='set'>
+          <div class='Name'>
+            <label for='Name'>Full Name</label>
+            <input id='Name' placeholder="Your Name" name="fullname" type="text" required />
+          </div>
+          <div class='photo'>
+            <div id="upload_widget" class="cloudinary-button">
+              <i class='fa fa-camera-retro' id="icon"></i>
+              <img style="display: none;" alt="img" id="profileImg">
+            </div>
+            <input type="text" style="display: none;" name="profile" id="profile">
+            <label for='upload'>Upload a photo</label>
+          </div>
+        </div>
+        <div class='set'>
+          <div class='E-mail'>
+            <label for='E-mail'>E-mail</label>
+            <input id='E-mail' name="email" placeholder="E-mail" type="email" required />
+          </div>
+          <div class='birthday'>
+            <label for='birthday'>Birthday</label>
+            <input id='birthday' placeholder='MM/DD/YYYY' name="bday" type='text' required />
+          </div>
+
+          <script>
+            $(document).ready(function () {
+              // Apply the datepicker to the birthday input field
+              $('#birthday').datepicker({
+                dateFormat: 'mm/dd/yy', // Format the date as MM/DD/YYYY
+                changeMonth: true, // Allow month dropdown
+                changeYear: true, // Allow year dropdown
+                yearRange: '1900:2030', // Limit the year range from 1900 to 2030 (you can adjust this as needed)
+              });
+            });
+          </script>
+        </div>
+        <div class='set'>
+          <div class='gender'>
+            <label for='gender-female'>Gender</label>
+            <div class='radio-container'>
+              <input checked='' id='gender-male' name='gender' type='radio' value='male'>
+              <label for='gender-male'>Male</label>
+              <input id='gender-female' name='gender' type='radio' value='female'>
+              <label for='gender-female'>Female</label>
+              <input id='gender-custom' name='gender' type='radio' value='Custom'>
+              <label for='gender-custom'>Custom</label>
+            </div>
+          </div>
+          <div class='Mobile'>
+            <label for='Mobile'>Mobile No.</label>
+            <input name="mobile" id='Mobile' placeholder="Mobile" type="tel" required />
+          </div>
+        </div>
+        <div class='Password'>
+          <label for='username'>Username</label>
+          <input id='username' name="username" placeholder="Create Username" type="text" required />
+        </div>
+        <div class='Password'>
+          <label for='Password'>Password</label>
+          <input id='Password' name="password" placeholder="Create Password" type="text" required />
+          <label for='CPassword'>Confirm Password</label>
+          <input id='CPassword' name="cpassword" placeholder="Confirm Password" type="text" required />
+        </div>
+      </header>
+      <footer>
+        <div class='set'>
+          <a href="/" class="btn" id='back'>Back</a>
+          <button class="btn" type="submit" id='next'>Next</button>
+        </div>
+      </footer>
+    </div>
+    <div id="alert" class="alert hideAlert">
+      <span class="closebtn" onclick="this.parentElement.classList.add('hideAlert');">&times;</span>
+      <strong>Warning!</strong>
+      <p id="alertMsg">Username Already Taken, Try Another</p>
+    </div>
+  </form>
+  <!-- partial -->
+  <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+
+  <script type="text/javascript">
+    let profile = document.getElementById("profile");
+    let profileImg = document.getElementById("profileImg");
+    let icon = document.getElementById("icon");
+    let upload_widget = document.getElementById("upload_widget");
+
+    var myWidget = cloudinary.createUploadWidget({
+      cloudName: 'dfn0nvt6t',
+      uploadPreset: 'platform'
+    }, (error, result) => {
+      if (!error && result && result.event === "success") {
+        console.log('Done! Here is the image info: ', result.info);
+        icon.style.display = "none";
+        upload_widget.style.padding = "0";
+        profileImg.style.display = "block";
+        profileImg.src = result.info.url;
+        profile.value = result.info.url;
+      }
+    }
+    )
+
+    document.getElementById("upload_widget").addEventListener("click", function () {
+      myWidget.open();
+    }, false);
+  </script>
+  <script src="./js/signup.js"></script>
+</body>
+
+</html>

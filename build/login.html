@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>The Platform login page</title>
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+		integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+		<link rel="stylesheet" href="./css/login.css">
+
+</head>
+
+<body>
+	<!-- partial:index.partial -->
+	<div class="box-form">
+		<div class="left">
+			<div class="overlay">
+				<h1>THE PLATFORM</h1>
+				<h3 style="color: rgb(0, 162, 255);">CHANGE IS IMMINENT</h3>
+				<p>BE A PART IN THE CHANGE</p>
+				<span>
+					<div style="margin-top: 130px;">
+						<p>login with social media</p>
+						<a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+						<a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+						<a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+						<a href="#"><i class="fa fa-google" aria-hidden="true"></i></a>
+					</div>
+				</span>
+			</div>
+		</div>
+
+
+		<div class="right">
+			<h5>Login</h5>
+			<p>Don't have an account? <a href="signup" target="_blank">Create Your Account</a> it takes less
+				than a minute</p>
+			<div class="inputs">
+				<input type="text" id="username" placeholder="Username">
+				<br>
+				<input type="password" id="password" placeholder="Password">
+			</div>
+
+			<br><br>
+
+			<div class="remember-me--forget-password">
+				<!-- Angular -->
+				<label>
+					<input type="checkbox" name="check" value="1">
+					Remember me<br>
+
+
+				</label>
+				<!-- <p><a href="#">forget password?</a></p> -->
+			</div>
+
+			<br>
+			<button id="login">Login</button>
+			<div id="alert" class="alert hideAlert">
+				<span class="closebtn" onclick="this.parentElement.classList.add('hideAlert');">&times;</span>
+				<strong>Warning!</strong>
+				<p id="alertMsg">Username Already Taken, Try Another</p>
+			</div>
+		</div>
+
+	</div>
+
+
+	<script src="./js/login.js"></script>
+</body>
+
+</html>
